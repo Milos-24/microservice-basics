@@ -10,7 +10,7 @@
     </parent>
 
     <groupId>com.commerce</groupId>
-    <artifactId>fraud</artifactId>
+    <artifactId>notification</artifactId>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -35,6 +35,12 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.commerce</groupId>
+            <artifactId>clients</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
