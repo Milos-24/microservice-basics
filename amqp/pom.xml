@@ -10,7 +10,14 @@
     </parent>
 
     <groupId>com.commerce</groupId>
-    <artifactId>clients</artifactId>
+    <artifactId>amqp</artifactId>
     <packaging>jar</packaging>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-amqp</artifactId>
+        </dependency>
+    </dependencies>
 
 </project>
