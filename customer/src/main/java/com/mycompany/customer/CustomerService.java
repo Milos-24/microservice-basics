@@ -1,5 +1,6 @@
 package com.mycompany.customer;
 
+import com.mycompany.amqp.RabbitMQMessageProducer;
 import com.mycompany.clients.fraud.FraudClient;
 import com.mycompany.clients.notification.NotificationClient;
 import com.mycompany.clients.notification.NotificationRequest;
@@ -8,7 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.Objects;
 
 @Service
-public record CustomerService(CustomerRepository customerRepository, FraudClient fraudClient, NotificationClient notificationClient) {
+public record CustomerService(CustomerRepository customerRepository, FraudClient fraudClient, NotificationClient notificationClient, RabbitMQMessageProducer rabbitMQMessageProducer) {
 
     public void registerCustomer(CustomerRegistrationRequest customerRegistrationRequest) {
         Customer customer = Customer.builder()
@@ -33,12 +34,25 @@ public record CustomerService(CustomerRepository customerRepository, FraudClient
             throw new IllegalStateException("FRAUD");
         }
         else {
-            notificationClient.sendNotification(new NotificationRequest(
-                    customer.getId(),
-                    customer.getEmail(),
-                    "Welcome "+
-                    customer.getFirstName()
-            ) );
+
+            //Ovo je sinhroni nacin slanja
+//            notificationClient.sendNotification(new NotificationRequest(
+//                    customer.getId(),
+//                    customer.getEmail(),
+//                    "Welcome "+
+//                    customer.getFirstName()
+//            ) );
+
+            rabbitMQMessageProducer.publish(
+                    new NotificationRequest(
+                            customer.getId(),
+                            customer.getEmail(),
+                            "Welcome "+
+                                    customer.getFirstName()
+                    ),
+                    "internal.exchange",
+                    "internal.notification.routing-key"
+            );
         }
 
     }
